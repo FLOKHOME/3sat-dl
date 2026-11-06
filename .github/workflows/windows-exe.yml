@@ -53,6 +53,14 @@ jobs:
           Remove-Item -Recurse -Force ffmpegtmp, ffmpeg-pkg, ffmpeg-pkg.zip
           Get-ChildItem ffmpeg
 
+      - name: ffmpeg entpacken (Linux)
+        if: matrix.ffmpeg_layout == 'tar'
+        run: |
+          mkdir -p /tmp/fmf && tar xJf ffmpeg-pkg -C /tmp/fmf
+          mv /tmp/fmf/*/bin/ffmpeg* ffmpeg/
+          rm -rf /tmp/fmf ffmpeg-pkg
+          ls -la ffmpeg/
+
       - name: EXE bauen (PyInstaller onefile, yt-dlp + ffmpeg eingebaut)
         run: pyinstaller --onefile --name ${{ matrix.out_name }}
           --collect-all yt_dlp --collect-all certifi
